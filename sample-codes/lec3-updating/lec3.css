@@ -1,0 +1,37 @@
+html, body {
+    height: 100%;
+}
+
+p {
+    font-family: monospace;
+}
+
+.other {
+    font-family: serif;
+}
+
+#emphasis {
+    font-style: italic;
+    font-weight: bold;
+}
+
+input[type="button"] {
+    -webkit-appearance: none;
+    font-size: 40pt;
+    font-weight: bold;
+}
+
+.hover {
+    font-style: italic;
+}
+
+div {
+    margin: 20px;
+    padding: 5px;
+    border: 5px red solid;
+    float: left;
+}
+
+span {
+    border: 1px black dotted;
+}
