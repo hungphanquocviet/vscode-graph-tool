@@ -264,8 +264,11 @@ function initPaint(svgId, conf = null) {
       );
     }
 
+    else {
+      undoList.push(svgCurrEle);
+      boxSizeList.push(svgCurrEle.getBBox());
+    }
     
-    boxSizeList.push(svgCurrEle.getBBox());
   };
 
   var handleClick = e => {
