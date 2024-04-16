@@ -14,36 +14,6 @@ if (typeof require !== 'undefined') {
 
 window.paints = [];
 
-function rect2path(x, y, width, height, rx, ry) {
-  x = parseFloat(x);
-  y = parseFloat(y);
-  width = parseFloat(width);
-  height = parseFloat(height);
-  rx = parseFloat(rx);
-  ry = parseFloat(ry);
-  rx = rx || ry || 0;
-  ry = ry || rx || 0;
-  if (isNaN(x - y + width - height + rx - ry)) return;
-  rx = rx > width / 2 ? width / 2 : rx;
-  ry = ry > height / 2 ? height / 2 : ry;
-  var path = "";
-  if (0 == rx || 0 == ry) {
-    path = `M ${x} ${y} h ${width} v ${height} h ${-width} Z`;
-  } else {
-    path =
-      `M ${x} ${y + ry} ` +
-      `a ${rx} ${ry} 0 0 1 ${rx} ${-ry} ` +
-      `h ${width - 2 * rx} ` +
-      `a ${rx} ${ry} 0 0 1 ${rx} ${ry} ` +
-      `v ${height - 2 * ry} ` +
-      `a ${rx} ${ry} 0 0 1 ${-rx} ${ry} ` +
-      `h ${2 * rx - width} ` +
-      `a ${rx} ${ry} 0 0 1 ${-rx} ${-ry} ` +
-      `Z`;
-  }
-  return path;
-}
-
 function ellipse2path(cx, cy, rx, ry) {
   cx = parseFloat(cx);
   cy = parseFloat(cy);
@@ -103,10 +73,6 @@ function initPaint(svgId, conf = null) {
   var eraserPath = "";
   var tempPoint = null;
   var drawLimited = false;
-  var resizeBtn = false;
-  var resizeIndex = null;
-  var resizeEle = null;
-  let resizeType = null;
 
   var undoList = [];
   var redoList = [];
@@ -117,8 +83,6 @@ function initPaint(svgId, conf = null) {
   var selectedCirclesLabel = [];
   var nodes = [];
   var nodesLabel = [];
-
-  var verticesPair = {};
 
   // Init
   for (const item of svg.children) {
@@ -322,7 +286,6 @@ function initPaint(svgId, conf = null) {
           // Append the line to the SVG
           svg.insertBefore(line, svg.firstChild);
           undoList.push(line);
-          verticesPair[label1] = label2;
 
           let mapping = JSON.parse(document.getElementById("mappingData").value);
           mapping.push([label1, label2]);
