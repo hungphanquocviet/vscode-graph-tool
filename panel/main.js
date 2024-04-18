@@ -370,23 +370,19 @@ function initPaint(svgId, conf = null) {
   });
 
   document.querySelector("#svg-undo").addEventListener("click", e => {
-    if (undoList.length < 1) {
-      return;
-    }
-    let undoEle = undoList.pop();
-    undoEle.remove();
-    redoList.push(undoEle);
-    redoBoxSizeList.push(boxSizeList.pop());
+    undoAction();
   });
 
   document.querySelector("#svg-redo").addEventListener("click", e => {
-    if (redoList.length < 1) {
-      return;
-    }
-    let redoEle = redoList.pop();
-    svg.append(redoEle);
-    undoList.push(redoEle);
-    boxSizeList.push(redoBoxSizeList.pop());
+    redoAction();
+  });
+
+  // Shortcuts undo/redo
+  document.addEventListener("keydown", function(e) {
+    if (e.ctrlKey && e.key === "z") 
+      undoAction();
+    if (e.ctrlKey && e.key === "y")
+      redoAction();
   });
 
   document.querySelector("#svg-clean").addEventListener("click", e => {
@@ -394,6 +390,26 @@ function initPaint(svgId, conf = null) {
     redoList = [];
     svg.innerHTML = "";
   });
+
+  var undoAction = () => {
+    if (undoList.length < 1) {
+      return;
+    }
+    let undoEle = undoList.pop();
+    undoEle.remove();
+    redoList.push(undoEle);
+    redoBoxSizeList.push(boxSizeList.pop());
+  }
+
+  var redoAction = () => {
+    if (redoList.length < 1) {
+      return;
+    }
+    let redoEle = redoList.pop();
+    svg.append(redoEle);
+    undoList.push(redoEle);
+    boxSizeList.push(redoBoxSizeList.pop());
+  }
 
   (['change-stay']).forEach(s => {
     document.querySelector("#svg-" + s).addEventListener("click", e => {
