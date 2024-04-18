@@ -65,8 +65,9 @@ function initPaint(svgId, conf = null) {
 
   var drawMoveOpen = false;
   var resizeOpen = false;
+  var saveLine = false;
   var svgCurrEle = null;
-
+  var group = null;
   // Text
   var text = null;
   var textCount = 0;
@@ -117,7 +118,7 @@ function initPaint(svgId, conf = null) {
 
     // Create the circle
     if (config.type === "circle") {
-      const group = document.createElementNS(svgns, "g");
+      group = document.createElementNS(svgns, "g");
       svgCurrEle = document.createElementNS(svgns, "circle");
       svgCurrEle.setAttribute("cx", x);
       svgCurrEle.setAttribute("cy", y);
@@ -142,18 +143,17 @@ function initPaint(svgId, conf = null) {
       nodesLabel.push(text);
       svg.appendChild(group);
 
-      undoList.push(group);
-    }
 
+    }
 
     if (config.type === "eraser") {
       eraserPath = `M ${x} ${y}`;
     }
 
     else {
-      svgCurrEle.setAttributeNS(null, "fill", "#6190e8");
-      svgCurrEle.setAttributeNS(null, "stroke", config.color);
-      svgCurrEle.setAttributeNS(null, "stroke-width", config.lineWidth);
+      // svgCurrEle.setAttributeNS(null, "fill", "#6190e8");
+      // svgCurrEle.setAttributeNS(null, "stroke", config.color);
+      // svgCurrEle.setAttributeNS(null, "stroke-width", config.lineWidth);
     }
   };
 
@@ -168,10 +168,15 @@ function initPaint(svgId, conf = null) {
       let index = undoList.findIndex(
         item => intersect(eraserPath, item.getAttributeNS(null, "d")).length > 0
       );
+      console.log(index);
       if (index !== -1) {
+        let undoEle = undoList[index];
         undoList[index].remove();
         undoList.splice(index, 1);
         boxSizeList.splice(index, 1);
+
+        undoList.push(undoEle);
+        boxSizeList.push(undoEle);
       }
     }
 
@@ -196,29 +201,41 @@ function initPaint(svgId, conf = null) {
       resizeOpen = false;
       return;
     }
+
     if (config.type === "line") {
-      return;
+      if (saveLine) {
+
+        saveLine = false;
+      }
+
     }
 
     if (config.type === "circle") {
-      svgCurrEle.setAttributeNS(
+      console.log("pushed");
+      group.setAttributeNS(
         null,
         "d",
         ellipse2path(
-          svgCurrEle.getAttributeNS(null, "cx"),
-          svgCurrEle.getAttributeNS(null, "cy"),
-          svgCurrEle.getAttributeNS(null, "r"),
-          svgCurrEle.getAttributeNS(null, "r"),
-          svgCurrEle.getAttributeNS(null, "fill")
+          // svgCurrEle.getAttributeNS(null, "cx"),
+          // svgCurrEle.getAttributeNS(null, "cy"),
+          // svgCurrEle.getAttributeNS(null, "r"),
+          // svgCurrEle.getAttributeNS(null, "r"),
+          // svgCurrEle.getAttributeNS(null, "fill")
+          group.querySelector("circle").getAttribute("cx"),
+          group.querySelector("circle").getAttribute("cy"),
+          group.querySelector("circle").getAttribute("r"),
+          group.querySelector("circle").getAttribute("r"),
+          group.querySelector("circle").getAttribute("fill"),
         )
       );
+      undoList.push(group);
     }
 
     else {
-      undoList.push(svgCurrEle);
-      boxSizeList.push(svgCurrEle.getBBox());
+      //undoList.push(svgCurrEle);
+      //boxSizeList.push(svgCurrEle.getBBox());
     }
-    
+
   };
 
   var handleClick = e => {
@@ -261,17 +278,36 @@ function initPaint(svgId, conf = null) {
           const [circle1, circle2] = selectedCircles;
           const [label1, label2] = selectedCirclesLabel;
           // Create a line connecting the two circles
-          const line = document.createElementNS(svgns, "line");
-          line.setAttribute("x1", circle1.getAttribute("cx"));
-          line.setAttribute("y1", circle1.getAttribute("cy"));
-          line.setAttribute("x2", circle2.getAttribute("cx"));
-          line.setAttribute("y2", circle2.getAttribute("cy"));
-          line.setAttribute("stroke", "black");
-          line.setAttribute("stroke-width", "2");
+          svgCurrEle = document.createElementNS(svgns, "line");
+          svgCurrEle.setAttribute("x1", circle1.getAttribute("cx"));
+          svgCurrEle.setAttribute("y1", circle1.getAttribute("cy"));
+          svgCurrEle.setAttribute("x2", circle2.getAttribute("cx"));
+          svgCurrEle.setAttribute("y2", circle2.getAttribute("cy"));
+          svgCurrEle.setAttribute("stroke", "black");
+          svgCurrEle.setAttribute("stroke-width", "2");
 
           // Append the line to the SVG
-          svg.insertBefore(line, svg.firstChild);
-          undoList.push(line);
+          svg.insertBefore(svgCurrEle, svg.firstChild);
+
+          console.log("printed");
+
+          // Set element, then push to undoList
+          svgCurrEle.setAttributeNS(
+            null,
+            "d",
+            `M ${svgCurrEle.getAttributeNS(null, "x1")} ${svgCurrEle.getAttributeNS(
+              null,
+              "y1"
+            )} L ${svgCurrEle.getAttributeNS(
+              null,
+              "x2"
+            )} ${svgCurrEle.getAttributeNS(null, "y2")}`
+          );
+
+          undoList.push(svgCurrEle);
+          boxSizeList.push(svgCurrEle.getBBox());
+          saveLine = true;
+          //undoList.push(line);
 
           let mapping = JSON.parse(document.getElementById("mappingData").value);
           mapping.push([label1, label2]);
@@ -364,17 +400,22 @@ function initPaint(svgId, conf = null) {
   });
 
   // Shortcuts undo/redo
-  document.addEventListener("keydown", function(e) {
-    if (e.ctrlKey && e.key === "z") 
+  document.addEventListener("keydown", function (e) {
+    if (e.ctrlKey && e.key === "z")
       undoAction();
     if (e.ctrlKey && e.key === "y")
       redoAction();
   });
 
+  // Clean the board
   document.querySelector("#svg-clean").addEventListener("click", e => {
     undoList = [];
     redoList = [];
+
+    nodes = [];
+    nodesLabel = [];
     svg.innerHTML = "";
+    document.getElementById("mappingData").value = "[]";
     textCount = 0;
   });
 
@@ -383,6 +424,7 @@ function initPaint(svgId, conf = null) {
       return;
     }
     let undoEle = undoList.pop();
+
     undoEle.remove();
     redoList.push(undoEle);
     redoBoxSizeList.push(boxSizeList.pop());
@@ -393,11 +435,11 @@ function initPaint(svgId, conf = null) {
       return;
     }
     let redoEle = redoList.pop();
-    
+
     // If the element is line, push to the front
-    if (redoEle.tagName === 'line') 
+    if (redoEle.tagName === 'line')
       svg.insertBefore(redoEle, svg.firstChild);
-    else 
+    else
       svg.append(redoEle);
 
     undoList.push(redoEle);
