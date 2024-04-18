@@ -7,3 +7,7 @@ vsc-extension-quickstart.md
 **/*.map
 **/.eslintrc.json
 **/.vscode-test.*
+.vscode/**
+.vscode-test/**
+.gitignore
+node_modules/@types/**
