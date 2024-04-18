@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- 
+    This file contains source code adapted from syfxlin/graffiti-board (licensed Apache-2.0).
+    https://github.com/syfxlin/graffiti-board/blob/5945b126c945073eced5e6eb78658bc2a7375881/index.html
+  -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="script-src 'unsafe-eval' 'nonce-ToBeReplacedByRandomToken';">
+    <link rel="stylesheet" href="./panel/Font-Awesome-5-8-2-all-min.css" />
+    <link rel="stylesheet" href="./panel/style.css" />
+    <title>Draw Note</title>
+</head>
+
+<body>
+    <input type="hidden" id="mappingData" value="[]">
+    <div style="display: none;">
+        <input type="button" value="nextline" id="text-nextline">
+        <input type="button" value="stay-nextline" id="text-change-stay">
+        <input type="button" value="change-nextline" id="text-change-nextline">
+    </div>
+
+    <div>
+        <div class="container">
+            <div class="svg-button">
+                <div class="svg-pen">
+                    <div class="svg-btn fa fa-eraser" data-type="eraser" title="eraser">
+                        <span></span>
+                    </div>
+                </div>
+                <span class="svgiconspliter"></span>
+                <div class="svg-shape">
+                    <div class="svg-btn fa fa-slash" data-type="line" title="line">
+                        <span></span>
+                    </div>
+                    <div class="svg-btn fa fa-circle" data-type="circle" title="circle">
+                        <span></span>
+                    </div>
+                </div>
+                <span class="svgiconspliter"></span>
+                <div class="svg-operate">
+                    <div class="svg-btn fa fa-reply" id="svg-undo" title="undo">
+                        <span></span>
+                    </div>
+                    <div class="svg-btn fa fa-share" id="svg-redo" title="redo">
+                        <span></span>
+                    </div>
+                    <div class="svg-btn fa fa-trash" id="svg-clean" title="clear board">
+                        <span></span>
+                    </div>
+                    <span class="svgiconspliter"></span>
+                    <div class="svg-btn fa fa-check-square" id="svg-change-stay" title="change and stay">
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="svg-container">
+                <svg id="svg"></svg>
+                
+            </div>
+            <div id="images" style="display: none;"></div>
+
+        </div>
+    </div>
+    <script nonce="ToBeReplacedByRandomToken" src="./panel/path-int.js"></script>
+    <script nonce="ToBeReplacedByRandomToken" src="./panel/main.js"></script>
+    <script nonce="ToBeReplacedByRandomToken" src="./panel/webview.js"></script>
+</body>
+
+</html>
