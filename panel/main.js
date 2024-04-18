@@ -114,16 +114,6 @@ function initPaint(svgId, conf = null) {
     let { x, y } = getPoint(e.clientX, e.clientY);
 
     redoList = [];
-    // Creating the elements when it is chosen
-    if (config.type === "line") {
-      svgCurrEle = document.createElementNS(svgns, "line");
-      svgCurrEle.setAttributeNS(null, "x1", x);
-      svgCurrEle.setAttributeNS(null, "y1", y);
-      svgCurrEle.setAttributeNS(null, "x2", x);
-      svgCurrEle.setAttributeNS(null, "y2", y);
-
-      tempPoint = { x, y };
-    }
 
     // Create the circle
     if (config.type === "circle") {
@@ -164,10 +154,6 @@ function initPaint(svgId, conf = null) {
       svgCurrEle.setAttributeNS(null, "fill", "#6190e8");
       svgCurrEle.setAttributeNS(null, "stroke", config.color);
       svgCurrEle.setAttributeNS(null, "stroke-width", config.lineWidth);
-      if (config.type !== "circle") {
-        svg.append(svgCurrEle);
-        svg.append(text);
-      }
     }
   };
 
@@ -389,6 +375,7 @@ function initPaint(svgId, conf = null) {
     undoList = [];
     redoList = [];
     svg.innerHTML = "";
+    textCount = 0;
   });
 
   var undoAction = () => {
@@ -406,7 +393,13 @@ function initPaint(svgId, conf = null) {
       return;
     }
     let redoEle = redoList.pop();
-    svg.append(redoEle);
+    
+    // If the element is line, push to the front
+    if (redoEle.tagName === 'line') 
+      svg.insertBefore(redoEle, svg.firstChild);
+    else 
+      svg.append(redoEle);
+
     undoList.push(redoEle);
     boxSizeList.push(redoBoxSizeList.pop());
   }
