@@ -2,3 +2,5 @@ node_modules
 .vscode
 *.vsix
 vsc-extension-quickstart.md
+.editorconfig 
+.eslintrc.json
