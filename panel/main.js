@@ -168,7 +168,7 @@ function initPaint(svgId, conf = null) {
       let index = undoList.findIndex(
         item => intersect(eraserPath, item.getAttributeNS(null, "d")).length > 0
       );
-      console.log(index);
+
       if (index !== -1) {
         let undoEle = undoList[index];
         undoList[index].remove();
@@ -216,11 +216,7 @@ function initPaint(svgId, conf = null) {
         null,
         "d",
         ellipse2path(
-          // svgCurrEle.getAttributeNS(null, "cx"),
-          // svgCurrEle.getAttributeNS(null, "cy"),
-          // svgCurrEle.getAttributeNS(null, "r"),
-          // svgCurrEle.getAttributeNS(null, "r"),
-          // svgCurrEle.getAttributeNS(null, "fill")
+
           group.querySelector("circle").getAttribute("cx"),
           group.querySelector("circle").getAttribute("cy"),
           group.querySelector("circle").getAttribute("r"),
@@ -307,7 +303,6 @@ function initPaint(svgId, conf = null) {
           undoList.push(svgCurrEle);
           boxSizeList.push(svgCurrEle.getBBox());
           saveLine = true;
-          //undoList.push(line);
 
           let mapping = JSON.parse(document.getElementById("mappingData").value);
           mapping.push([label1, label2]);
@@ -424,7 +419,15 @@ function initPaint(svgId, conf = null) {
       return;
     }
     let undoEle = undoList.pop();
-
+  
+    // Check if the element being undone is a line
+    if (undoEle.tagName === 'line') {
+      console.log("reached here");
+      const label1 = selectedCirclesLabel.pop();
+      const label2 = selectedCirclesLabel.pop();
+      removeRelationship(label1, label2);
+    }
+  
     undoEle.remove();
     redoList.push(undoEle);
     redoBoxSizeList.push(boxSizeList.pop());
@@ -435,15 +438,28 @@ function initPaint(svgId, conf = null) {
       return;
     }
     let redoEle = redoList.pop();
-
+  
+    // Check if the element being redone is a line
+    if (redoEle.tagName === 'line') {
+      const label1 = selectedCirclesLabel.pop();
+      const label2 = selectedCirclesLabel.pop();
+      removeRelationship(label1, label2);
+    }
+  
     // If the element is line, push to the front
     if (redoEle.tagName === 'line')
       svg.insertBefore(redoEle, svg.firstChild);
     else
       svg.append(redoEle);
-
+  
     undoList.push(redoEle);
     boxSizeList.push(redoBoxSizeList.pop());
+  }
+
+  function removeRelationship(label1, label2) {
+    let mapping = JSON.parse(document.getElementById("mappingData").value);
+    mapping = mapping.filter(([l1, l2]) => !(l1 === label1 && l2 === label2));
+    document.getElementById("mappingData").value = JSON.stringify(mapping);
   }
 
   (['change-stay']).forEach(s => {
@@ -451,6 +467,8 @@ function initPaint(svgId, conf = null) {
       document.querySelector('#text-' + s).onclick()
     });
   })
+
+
 }
 
 initPaint("svg");

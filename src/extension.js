@@ -169,21 +169,26 @@ function activate(context) {
 			vscode.window.showErrorMessage('The text editor has been closed');
 			return;
 		}
-		vscode.window.showTextDocument(currentEditor.document, {
-			viewColumn: currentEditor.viewColumn,
+
+		const editor = currentEditor; // Save current editor
+		const lastLine = editor.document.lineCount - 1;
+		const fullRange = new vscode.Range(0, 0, lastLine, editor.document.lineAt(lastLine).text.length);
+
+		vscode.window.showTextDocument(editor.document, {
+			viewColumn: editor.viewColumn,
 			selection: new vscode.Range(currentLine, 0, currentLine, 0)
 		})
-			.then((editor) => editor.edit(edit => { // Set to the actual text
-				let lf = '\n'
-				edit.replace(new vscode.Range(currentLine, 0, currentLine + 1, 0), text + lf);
+			.then(() => editor.edit(edit => {
+				let lf = '';
+				edit.replace(fullRange, text + lf); // Replace entire content with new text
 			}))
-			.then(() => vscode.window.showTextDocument(currentEditor.document, {
-				viewColumn: currentEditor.viewColumn,
+			.then(() => vscode.window.showTextDocument(editor.document, {
+				viewColumn: editor.viewColumn,
 				selection: new vscode.Range(currentLine + 1, 0, currentLine + 1, 0)
 			}))
 			.then(() => {
-				pushCurrentLine()
-			})
+				pushCurrentLine();
+			});
 	}
 
 	context.subscriptions.push(
