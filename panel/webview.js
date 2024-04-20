@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 const drawAPI = {
   unstable: {
     nonce: () => 'ToBeReplacedByRandomToken',

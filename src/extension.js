@@ -110,16 +110,16 @@ function activate(context) {
 		currentPanel.reveal();
 	}
 
-	function getEditorText(show) {
+	function getEditorText() {
 		let currentEditor_ = currentEditor
 		let currentLine_ = currentLine
+		
 		// This line identifies the text editor, e.g. .txt file
 		let activeTextEditor = vscode.window.activeTextEditor;
 		if (activeTextEditor) {
 			currentEditor_ = activeTextEditor;
 		}
 		if (!currentEditor_ || currentEditor_.document.isClosed) {
-			//if (show) vscode.window.showErrorMessage('No active line');
 			return {};
 		}
 		currentLine_ = currentEditor_.selection.active.line

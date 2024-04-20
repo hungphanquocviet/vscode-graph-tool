@@ -149,12 +149,6 @@ function initPaint(svgId, conf = null) {
     if (config.type === "eraser") {
       eraserPath = `M ${x} ${y}`;
     }
-
-    else {
-      // svgCurrEle.setAttributeNS(null, "fill", "#6190e8");
-      // svgCurrEle.setAttributeNS(null, "stroke", config.color);
-      // svgCurrEle.setAttributeNS(null, "stroke-width", config.lineWidth);
-    }
   };
 
   var drawMove = e => {
@@ -171,12 +165,14 @@ function initPaint(svgId, conf = null) {
 
       if (index !== -1) {
         let undoEle = undoList[index];
+        if (undoEle.tagName === 'line') {
+          let relation = undoEle.getAttribute("data-id");
+          removeRelationship(relation);
+        }
+        
         undoList[index].remove();
         undoList.splice(index, 1);
         boxSizeList.splice(index, 1);
-
-        undoList.push(undoEle);
-        boxSizeList.push(undoEle);
       }
     }
 
@@ -281,11 +277,13 @@ function initPaint(svgId, conf = null) {
           svgCurrEle.setAttribute("y2", circle2.getAttribute("cy"));
           svgCurrEle.setAttribute("stroke", "black");
           svgCurrEle.setAttribute("stroke-width", "2");
+          svgCurrEle.setAttribute("data-id", `[${label1},${label2}]`);
 
           // Append the line to the SVG
           svg.insertBefore(svgCurrEle, svg.firstChild);
 
-          console.log("printed");
+          let dataId = svgCurrEle.getAttribute("data-id");
+          console.log(dataId);
 
           // Set element, then push to undoList
           svgCurrEle.setAttributeNS(
@@ -422,10 +420,7 @@ function initPaint(svgId, conf = null) {
   
     // Check if the element being undone is a line
     if (undoEle.tagName === 'line') {
-      console.log("reached here");
-      const label1 = selectedCirclesLabel.pop();
-      const label2 = selectedCirclesLabel.pop();
-      removeRelationship(label1, label2);
+      removeRelationship(undoEle.getAttribute("data-id"));
     }
   
     undoEle.remove();
@@ -441,9 +436,7 @@ function initPaint(svgId, conf = null) {
   
     // Check if the element being redone is a line
     if (redoEle.tagName === 'line') {
-      const label1 = selectedCirclesLabel.pop();
-      const label2 = selectedCirclesLabel.pop();
-      removeRelationship(label1, label2);
+      addBackRelationship(redoEle.getAttribute("data-id"));
     }
   
     // If the element is line, push to the front
@@ -456,9 +449,18 @@ function initPaint(svgId, conf = null) {
     boxSizeList.push(redoBoxSizeList.pop());
   }
 
-  function removeRelationship(label1, label2) {
+  function removeRelationship(relation) {
     let mapping = JSON.parse(document.getElementById("mappingData").value);
-    mapping = mapping.filter(([l1, l2]) => !(l1 === label1 && l2 === label2));
+    let relationParse = JSON.parse(relation);
+    mapping = mapping.filter(([l1, l2]) => !(Number(l1) === Number(relationParse[0]) && Number(l2) === Number(relationParse[1])));
+    
+    document.getElementById("mappingData").value = JSON.stringify(mapping);
+  }
+
+  function addBackRelationship(relation) {
+    let mapping = JSON.parse(document.getElementById("mappingData").value);
+    let relationParse = JSON.parse(relation);
+    mapping.push([String(relationParse[0]), String(relationParse[1])]);
     document.getElementById("mappingData").value = JSON.stringify(mapping);
   }
 
@@ -467,8 +469,6 @@ function initPaint(svgId, conf = null) {
       document.querySelector('#text-' + s).onclick()
     });
   })
-
-
 }
 
 initPaint("svg");
