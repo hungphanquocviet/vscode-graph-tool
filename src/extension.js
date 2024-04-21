@@ -63,7 +63,7 @@ function activate(context) {
 	function createNewPanel() {
 		// Create and show panel
 		currentPanel = vscode.window.createWebviewPanel(
-			'drawNote',
+			'graphTool',
 			'Graph Tool Demo',
 			vscode.ViewColumn.Two,
 			{
