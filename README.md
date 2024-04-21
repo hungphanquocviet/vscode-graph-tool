@@ -1,6 +1,6 @@
 # VS Code Graph Tool
 
-This Visual Studio Code extension allows you to create and visualize graph data structures directly within your code editor. It provides a simple interface to create nodes and edges, and then translates the graph into a text file in the DOT language, which is commonly used for graph descriptions.
+This Visual Studio Code extension allows you to create and visualize graph data structures directly within your code editor. It provides a simple interface to create nodes and edges, and then translates the graph into a text file in the DOT language.
 
 ## Features
 
@@ -19,13 +19,6 @@ This Visual Studio Code extension allows you to create and visualize graph data 
 
 1. Open a new text file in Visual Studio Code.
 
-
-## Example
-
-Here's an example of how to create a simple graph using this extension:
-
-This will create a graph with three nodes (A, B, C) connected in a cycle.
-
 ## Requirements
 
 - Visual Studio Code
@@ -37,6 +30,10 @@ This will create a graph with three nodes (A, B, C) connected in a cycle.
 
 ## License
 Distributed under the Apache 2.0 License. See `LICENSE` for more information.
+
+## Acknowledgements
+- [syfxlin/graffiti-board](https://github.com/syfxlin/graffiti-board/tree/5945b126c945073eced5e6eb78658bc2a7375881) for drawing panel design
+- [zhaouv/vscode-markdown-draw](https://github.com/zhaouv/vscode-markdown-draw?tab=readme-ov-file) for altering text file functionality from a VSCode Extension
 
 ## Release Notes
 
