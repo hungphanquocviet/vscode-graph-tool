@@ -69,7 +69,7 @@ function activate(context) {
 		// Create and show panel
 		currentPanel = vscode.window.createWebviewPanel(
 			'graphTool',
-			'Graph Tool Demo',
+			'VSCode Graph Tool',
 			vscode.ViewColumn.Two,
 			{
 				// Enable scripts in the webview

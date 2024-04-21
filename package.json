@@ -1,6 +1,6 @@
 {
-  "name": "graph-tool-demo-4",
-  "displayName": "Graph Tool Demo 4",
+  "name": "vscode-graph-tool",
+  "displayName": "VS Code Graph Data Structure Tool",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -14,7 +14,7 @@
   "contributes": {
     "commands": [{
       "command": "graph-tool-demo-4.start",
-      "title": "Graph Tool Demo"
+      "title": "VSCode Graph Tool"
     }]
   },
   "scripts": {
