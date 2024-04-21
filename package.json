@@ -1,8 +1,12 @@
 {
   "name": "vscode-graph-tool",
   "displayName": "VS Code Graph Data Structure Tool",
-  "description": "",
+  "description": "Visualize graph data structures directly within your code editor.",
   "version": "0.0.1",
+  "license": "Apache-2.0",
+	"repository": {
+		"url": "https://github.com/hungphanquocviet/vscode-graph-tool.git"
+	},
   "engines": {
     "vscode": "^1.85.0"
   },
