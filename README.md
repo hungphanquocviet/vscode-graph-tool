@@ -13,11 +13,13 @@ This Visual Studio Code extension allows you to create and visualize graph data 
 1. Open Visual Studio Code.
 2. Go to the Extensions view by clicking on the square icon on the sidebar or pressing `Ctrl+Shift+X`.
 3. Search for "VSCode Graph Tool" in the Extensions view search box.
-4. Click on the Install button for the "VSCode Graph Tool" extension by ChatGPT.
+4. Click on the Install button for the "VSCode Graph Tool" extension by Hung Phan Quoc Viet.
 
 ## Usage
 
 1. Open a new text file in Visual Studio Code.
+2. Open up the Command Pallete at the top of VSCode or press `Ctrl+Shift+P`
+3. Start using the extension
 
 ## Requirements
 
