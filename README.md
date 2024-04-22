@@ -1,4 +1,4 @@
-# VS Code Graph Tool
+# VS Code Graph Data Structure Tool
 
 This Visual Studio Code extension allows you to create and visualize graph data structures directly within your code editor. It provides a simple interface to create nodes and edges, and then translates the graph into a text file in the DOT language.
 
@@ -13,7 +13,7 @@ This Visual Studio Code extension allows you to create and visualize graph data 
 1. Open Visual Studio Code.
 2. Go to the Extensions view by clicking on the square icon on the sidebar or pressing `Ctrl+Shift+X`.
 3. Search for "VSCode Graph Tool" in the Extensions view search box.
-4. Click on the Install button for the "VSCode Graph Tool" extension by Hung Phan Quoc Viet.
+4. Click on the Install button for the "VSCode Graph Data Structure Tool" extension by Hung Phan Quoc Viet.
 
 ## Usage
 
