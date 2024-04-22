@@ -39,7 +39,7 @@ Distributed under the Apache 2.0 License. See `LICENSE` for more information.
 
 ## Release Notes
 
-### 1.0.0
+### 0.0.1
 
 Initial release.
 
